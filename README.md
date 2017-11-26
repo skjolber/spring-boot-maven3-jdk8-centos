@@ -91,7 +91,7 @@ The secret must be manually configured on the generated build (under advanced op
 
       Not currently supported
 
-## Contributing
+## Testing
 
 In order to test your changes to this STI image or to the STI scripts, you can use the `test/run` script. Before that, you have to build the 'candidate' image:
 
@@ -101,6 +101,58 @@ $ docker build -t skjolber/spring-boot-maven3-jdk8-centos-candidate .
 
 After that you can execute `./test/run`. You can also use `make test` to automate this.
 
+# Tuning
+I'm using a set of default JVM parameters:
+
+    -Djava.security.egd=file:/dev/./urandom 
+    -Djava.awt.headless=true 
+    -Dfile.encoding=UTF-8
+    -XX:+UseG1GC 
+
+## Memory usage
+My Openshift pods seem to be using more memory than expected. While this is a complex topic, I've come up with a few parameters for reducing the footprint. As in (almost) all optimization, measuring first is important.
+
+#### Web container
+The Undertow web container seems to be least memory hungry.
+
+### JMX
+To get an overview of the memory use Java Misson Control or JConsole with JMX. Enable JMX and run port-forwarding to your pod. Add Java parameters
+
+```
+-Dcom.sun.management.jmxremote.port=8090 -Dcom.sun.management.jmxremote.rmi.port=8090 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+```
+
+and start port-forwarding using
+
+```
+oc port-forward <pod> 8090:8090
+```
+
+and connect to `localhost:8090`.
+
+### JVM memory parameters
+After making sure all code paths have been visited, and running some simple benchmarks, I arrived at the following:
+
+|Name|Default|Parameter|
+|----|------|---------|
+|Compressed class size|1 GB|-XX:CompressedClassSpaceSize=16m|
+|Metaspace|Unlimited|-XX:MaxMetaspaceExpansion=0 -XX:MaxMetaspaceSize=64m|
+|[Reserved code cache]|32M/48M|-XX:ReservedCodeCacheSize=24m|
+
+### Image memory parameters
+While some memory leak has been fixed in the latest version of Java 8 (152), some [additional parameters] can be used to reduce memory. Add the following environment variables:
+
+    export MALLOC_ARENA_MAX=2
+    # disable dynamic mmap threshold, see M_MMAP_THRESHOLD in "man mallopt"
+    export MALLOC_MMAP_THRESHOLD_=131072
+    export MALLOC_MMAP_THRESHOLD_=131072
+    export MALLOC_TOP_PAD_=131072
+    export MALLOC_MMAP_MAX_=65536
+
+### Result
+Using these parameters, and 128m Xmx, I was able to get a 35 MB Spring Boot app to use about 360 MB (as reported by Openshift metrics). Obiously you'll want to add some margin, or the pod will be terminated with OOM error.
+
+
 ## Copyright
 
 Released under the Apache License 2.0. See the [LICENSE](LICENSE) file.
@@ -109,3 +161,6 @@ Released under the Apache License 2.0. See the [LICENSE](LICENSE) file.
 
   * http://trustmeiamadeveloper.com/2016/03/18/where-is-my-memory-java/
   * https://spring.io/blog/2015/12/10/spring-boot-memory-performance
+   
+[Reserved code cache]:		https://docs.oracle.com/javase/8/embedded/develop-apps-platforms/codecache.htm
+[additional parameters]:	https://stackoverflow.com/questions/26041117/growing-resident-memory-usage-rss-of-java-process
