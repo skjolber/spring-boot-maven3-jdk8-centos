@@ -6,7 +6,7 @@
 # IMAGE_NAME specifies a name of the candidate image used for testing.
 # The image has to be available before this script is executed.
 #
-IMAGE_NAME=${IMAGE_NAME-codecentric/springboot-maven3-centos-candidate}
+IMAGE_NAME=${IMAGE_NAME-skjolber/spring-boot-maven3-jdk8-centos-candidate}
 
 if [ $# -eq 0 ]; then
   echo "ERROR: No test project name has been passed."
@@ -31,14 +31,14 @@ cid_file=$($MKTEMP_EXEC -u --suffix=.cid)
 s2i_args="--force-pull=false --loglevel=2"
 
 # Read exposed port from image meta data
-test_port="$(docker inspect --format='{{range $key, $value := .ContainerConfig.ExposedPorts }}{{$key}}{{end}}' ${IMAGE_NAME} | sed 's/\/.*//')"
+test_port="$(docker inspect --type=image --format='{{range $key, $value := .ContainerConfig.ExposedPorts }}{{$key}}{{end}}' ${IMAGE_NAME} | sed 's/\/.*//')"
 
 info() {
   echo -e "\n\e[1m[INFO] $@...\e[0m\n"
 }
 
 image_exists() {
-  docker inspect $1 &>/dev/null
+  docker inspect --type=image $1 &>/dev/null
 }
 
 container_exists() {
@@ -49,13 +49,13 @@ container_ip() {
   if (echo "$OSTYPE" | egrep -qs 'darwin'); then
     docker-machine ip
   else
-    docker inspect --format="{{ .NetworkSettings.IPAddress }}" $(cat $cid_file)
+    docker inspect --type=image --format="{{ .NetworkSettings.IPAddress }}" $(cat $cid_file)
   fi
 }
 
 container_port() {
   if (echo "$OSTYPE" | egrep -qs 'darwin'); then
-    docker inspect --format='{{(index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort}}' $(cat $cid_file)
+    docker inspect --type=image --format='{{(index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort}}' $(cat $cid_file)
   else
     echo $test_port
   fi
