@@ -37,7 +37,7 @@ else
 fi
 # Fix source directory permissions
 
-echo "---> Copying resulting jar"
+echo "---> Copying resulting jar ($(find $APP_TARGET -name *.jar))"
 cp `find $APP_TARGET -name *.jar` $cwd/app.jar
 
 cd $cwd
