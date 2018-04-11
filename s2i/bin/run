@@ -5,6 +5,6 @@ printenv
 echo "---> Starting Spring Boot application"
 echo "--> # APP_TARGET = $APP_TARGET"
 echo "--> # JAVA_OPTS = $JAVA_OPTS"
-echo "---> Running application from jar ($(find $APP_TARGET -name *.jar)) using command"
-echo "java $JAVA_OPTS -Dspring.profiles.active=$SPRING_ACTIVE_PROFILES -Xms$XMS -Xmx$XMX -jar app.jar"
-java $JAVA_OPTS -Dspring.profiles.active=$SPRING_ACTIVE_PROFILES -Xms$XMS -Xmx$XMX -jar app.jar
+echo "---> Running application from jar 'app.jar' using command"
+echo "java $JAVA_OPTS -Dspring.profiles.active=$SPRING_ACTIVE_PROFILES -Xms$XMS -Xmx$XMX -jar ./app.jar"
+java $JAVA_OPTS -Dspring.profiles.active=$SPRING_ACTIVE_PROFILES -Xms$XMS -Xmx$XMX -jar ./app.jar

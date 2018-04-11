@@ -4,14 +4,15 @@
 set -e
 
 cwd=$(pwd)
+echo $cmw
 
-echo "---> Installing application source"
 cd /tmp/src
 
 echo "---> Building application from source"
 echo "--> # MVN_ARGS = $MVN_ARGS"
 echo "--> # MAVEN_OPTS = $MAVEN_OPTS"
 echo "--> # MAVEN_PROFILES = $MAVEN_ACTIVE_PROFILES"
+echo "--> # APP_TARGET = $APP_TARGET"
 echo "--> See documentation on .mvn/maven.config and .mvn/jvm.config for further build configuration."
 
 if [ "$MAVEN_ACTIVE_PROFILES" = "" ]
@@ -35,14 +36,13 @@ else
 	  mvn clean install $MAVEN_PROFILES $MVN_ARGS
 	fi
 fi
-# Fix source directory permissions
 
-echo "---> Copying resulting jar ($(find $APP_TARGET -name *.jar))"
-cp `find $APP_TARGET -name *.jar` $cwd/../app.jar
-
-cd $cwd
+echo "---> Copying resulting jar ($(find $APP_TARGET -name *.jar)) to $cwd/app.jar"
+cp `find $APP_TARGET -name *.jar` $cwd/app.jar
 
 echo "---> Deleting original source"
 rm -rf /tmp/src
 
+# Fix source directory permissions
+cd $cwd
 fix-permissions ./

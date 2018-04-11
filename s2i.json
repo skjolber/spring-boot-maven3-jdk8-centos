@@ -269,6 +269,10 @@
 				{
 		                	"name": "XMX",
 		                	"value": "${XMX}"
+				},
+				{
+	                        	"name": "APP_TARGET",
+	                        	"value": "${APP_TARGET}"
 				}
 		        ]
                     }
