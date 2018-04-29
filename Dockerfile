@@ -8,17 +8,17 @@ FROM centos/s2i-core-centos7
 EXPOSE 8080
 
 ENV JAVA_VERSON 1.8.0
-ENV MAVEN_VERSION 3.5.2
+ENV MAVEN_VERSION 3.5.3
 
-RUN curl --insecure --junk-session-cookies --location --remote-name --silent --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/server-jre-8u162-linux-x64.tar.gz && \
+RUN curl --insecure --junk-session-cookies --location --remote-name --silent --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/server-jre-8u172-linux-x64.tar.gz && \
     mkdir -p /usr/java && \
-    gunzip server-jre-8u162-linux-x64.tar.gz && \
-    tar xf server-jre-8u162-linux-x64.tar -C /usr/java && \
-    alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_162/bin/java 1 && \
-    alternatives --install /usr/bin/jar  jar  /usr/java/jdk1.8.0_162/bin/jar  1 && \
-    rm server-jre-8u162-linux-x64.tar
+    gunzip server-jre-8u172-linux-x64.tar.gz && \
+    tar xf server-jre-8u172-linux-x64.tar -C /usr/java && \
+    alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_172/bin/java 1 && \
+    alternatives --install /usr/bin/jar  jar  /usr/java/jdk1.8.0_172/bin/jar  1 && \
+    rm server-jre-8u172-linux-x64.tar
 
-ENV JAVA_HOME=/usr/java/jdk1.8.0_162
+ENV JAVA_HOME=/usr/java/jdk1.8.0_172
 
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
