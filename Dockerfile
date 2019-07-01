@@ -8,7 +8,7 @@ FROM centos/s2i-core-centos7
 EXPOSE 8080
 
 ENV JAVA_VERSON 1.8.0
-ENV MAVEN_VERSION 3.6.0
+ENV MAVEN_VERSION 3.6.1
 
 RUN yum install -y curl
 
