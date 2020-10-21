@@ -10,6 +10,8 @@ EXPOSE 8080
 ENV JAVA_VERSON 1.8.0
 ENV MAVEN_VERSION 3.6.1
 
+RUN yum update -y
+
 RUN yum install -y curl
 
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
@@ -18,11 +20,9 @@ RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/bina
 
 ENV MAVEN_HOME /usr/share/maven
 
-RUN yum update -y
-
 RUN yum install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
 
-RUN yum clean all && rm -rf /var/cache/yum
+RUN yum clean all && rm -rf /var/cache/yum 
 
 ENV JAVA_HOME /usr/lib/jvm/java
 
