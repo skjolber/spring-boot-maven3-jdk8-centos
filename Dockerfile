@@ -10,7 +10,7 @@ EXPOSE 8080
 ENV JAVA_VERSON 11
 ENV MAVEN_VERSION 3.6.0
 
-RUN dnf install -y curl
+RUN yum install -y curl
 
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
@@ -18,11 +18,11 @@ RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/bina
 
 ENV MAVEN_HOME /usr/share/maven
 
-RUN dnf update -y
+RUN yum update -y
 
-RUN dnf install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
+RUN yum install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
 
-RUN dnf clean all && rm -rf /var/cache/yum
+RUN yum clean all && rm -rf /var/cache/yum
 
 ENV JAVA_HOME /usr/lib/jvm/java
 
