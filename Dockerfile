@@ -12,21 +12,12 @@ RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|
 EXPOSE 8080
 
 ENV JAVA_VERSON 11
-ENV MAVEN_VERSION 3.6.0
 
-RUN yum install -y curl
+RUN dnf install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
 
-RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
-  && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
-  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+RUN dnf update -y
 
-ENV MAVEN_HOME /usr/share/maven
-
-RUN yum install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
-
-RUN yum update -y
-
-RUN yum clean all && rm -rf /var/cache/yum
+RUN dnf clean all && rm -rf /var/cache/yum
 
 ENV JAVA_HOME /usr/lib/jvm/java
 
