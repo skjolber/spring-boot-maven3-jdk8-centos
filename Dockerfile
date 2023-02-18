@@ -3,19 +3,24 @@
 # This image provide a base for running Spring Boot based applications. It
 # provides a base Java 8 installation and Maven 3.
 
-FROM centos/s2i-core-centos8
-
-RUN cd /etc/yum.repos.d/
-RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+FROM centos/s2i-core-centos7
 
 EXPOSE 8080
 
 ENV JAVA_VERSON 11
+ENV MAVEN_VERSION 3.6.0
 
-RUN dnf install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
+RUN dnf install -y curl
+
+RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
+  && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
 
 RUN dnf update -y
+
+RUN dnf install -y java-$JAVA_VERSON-openjdk-headless java-$JAVA_VERSON-openjdk-devel
 
 RUN dnf clean all && rm -rf /var/cache/yum
 
@@ -31,4 +36,3 @@ USER 1001
 CMD $STI_SCRIPTS_PATH/usage
 
 RUN cat /etc/redhat-release
-

@@ -7,12 +7,12 @@
             "description": "Application template for Java Spring Boot applications built using S2I.",
             "tags": "java,xpaas",
             "version": "1.0.0",
-            "openshift.io/display-name": "Oracle server-JDK 8 with Maven 3 on Centos"
+            "openshift.io/display-name": "Oracle server-JDK 11 with Maven 3 on Centos"
         },
-        "name": "spring-boot-maven3-jdk8-centos"
+        "name": "spring-boot-maven3-jdk11-centos"
     },
     "labels": {
-        "template": "spring-boot-maven3-jdk8-centos",
+        "template": "spring-boot-maven3-jdk11-centos",
         "xpaas": "1.4.0"
     },
     "message": "A new Java Spring Boot application has been created in your project.",
@@ -35,7 +35,7 @@
             "displayName": "Docker image",
             "description": "Full image tag. You should only need to modify this if you've created your own image.",
             "name": "IMAGE_STREAM_DESIGNATOR",
-            "value": "skjolber/spring-boot-maven3-jdk8-centos",
+            "value": "skjolber/spring-boot-maven3-jdk11-centos",
             "required": true
         },
         {
