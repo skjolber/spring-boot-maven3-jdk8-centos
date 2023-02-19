@@ -102,7 +102,7 @@ $ docker build -t skjolber/spring-boot-maven3-jdk8-centos-candidate .
 or 
 
 ```
-$ docker build --network host -t skjolber/spring-boot-maven3-jdk8-centos-candidate:v123 .
+$ docker build --ulimit nofile=1024000:1024000 --network host -t skjolber/spring-boot-maven3-jdk8-centos-candidate:v123 .
 ```
 
 After that you can execute `./test/run`. You can also use `make test` to automate this.
