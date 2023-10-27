@@ -1,3 +1,6 @@
+# This project has been retired
+While it served me well for years, my apps have now moved on from Openshift.
+
 # Spring Boot - Maven 3 - CentOS Docker image
 
 [![Build Status](https://travis-ci.org/codecentric/springboot-maven3-centos.svg?branch=master)](https://travis-ci.org/codecentric/springboot-maven3-centos)
